@@ -22,8 +22,8 @@ class Simulation:
     self.bg = pygame.image.load("resources/bg.png")
     
     # pictures resources
-    self.animat_sprite  = pygame.image.load("resources/animat.png")
-    self.fruit          = pygame.image.load("resources/banana.png")
+    self.animat_sprite  = pygame.image.load("resources/squirrel.png")
+    self.fruit          = pygame.image.load("resources/acorn.png")
     self.veggie         = pygame.image.load("resources/tomato.png")
 
     # modify pictures to appropriate sizes
