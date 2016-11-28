@@ -1,0 +1,2 @@
+# Animats
+Class project
