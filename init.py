@@ -2,6 +2,7 @@
 import sys  # sys.exit()
 import pygame
 import math
+import animats
 
 class Simulation:
   def __init__(self, num_animats, width, height, saved_nets):
@@ -30,11 +31,12 @@ class Simulation:
     self.bg            = pygame.transform.scale(self.bg, (1000, 700))
     self.fruit         = pygame.transform.scale(self.fruit, (26, 26))
     self.veggie        = pygame.transform.scale(self.veggie, (26, 26))
+    self.env = animats.Environment(num_animats, width, height, saved_nets)
 
   def update(self, speed):
     # update model a certain number of times
-    #for i in range(speed):
-     # self.env.update()
+    for i in range(speed):
+      self.env.update()
 
     # for future 'pause' button, the parameter take milliseconds pause time
     # pygame.time.wait()
@@ -43,7 +45,7 @@ class Simulation:
     self.screen.blit(self.bg, (0,0))
 
     # paint food
-    '''for food in self.env.foods:
+    for food in self.env.foods:
         if isinstance(food, animats.Fruit):
           self.screen.blit(self.fruit, \
                    (food.x - animats.Food.radius, \
@@ -64,7 +66,7 @@ class Simulation:
         elif isinstance(animat.food, animats.Veggie):
           self.screen.blit(self.veggie, \
                    (animat.x - animats.Animat.radius, \
-                    animat.y - animats.Animat.radius))'''
+                    animat.y - animats.Animat.radius))
 
     pygame.display.flip()
 
