@@ -31,6 +31,7 @@ class Animat(cell.Cell):
         
         self.isFoodInHand = False
         self.isAtCache = False
+        self.cache = [2,2]  #temp cache
 
     def move(self):
         nextX = self.x + self.speed[0]
@@ -68,6 +69,25 @@ class Animat(cell.Cell):
             return True
         else:
             return False
+        
+    def moveTowardsCache(self,x,y):
+        direction = -1
+        minDist = self.calDistance(self.x, self.y, x, y)
+        for i in range(4):
+            nextX = self.x + self.Speeds[i][0]
+            nextY = self.y + self.Speeds[i][1]
+            if self.calDistance(nextX, nextY, x, y) < minDist:
+                direction = i
+                minDist = self.calDistance(self.x, self.y, nextX, nextY)
+        if direction >= 0:
+            self.moveInDirection(direction)
+
+        #return True is next position is the target
+        if minDist - 0 < 0.001:
+            print("At cache")
+            return True
+        else:
+            return False
 
     def turnBackward(self):
         if self.speed[0] != 0:
@@ -97,7 +117,7 @@ class Animat(cell.Cell):
 
     def eat(self):
         self.energy += self.MaxEnergy * 0.3
-        print()
+        #print()
         if self.energy > self.MaxEnergy:
             self.energy = self.MaxEnergy
             
@@ -132,7 +152,7 @@ class Animat(cell.Cell):
             self.lastState = self.calState(foods, nonfoods)
             self.lastAction = self.ai.chooseAction(state)
             
-            print(self.energy, self.lastState, self.lastAction)
+            #print(self.energy, self.lastState, self.lastAction)
 
             #self.moveInDirection(self.lastAction)
             self.decodeAndExecuteAction(self.lastAction, foods, nonfoods)
@@ -145,28 +165,50 @@ class Animat(cell.Cell):
         food = self.senseFood(foods)
         nonfood = self.senseFood(nonfoods)
         if food is None and nonfood is None:
+            if(self.isHungry()):
+                print("hungry, sense nothing")
+            else:
+                print("not hungry, sense nothing")
             return self.isHungry(), 0
+        elif food is not None and nonfood is None:
+            if(self.isHungry()):
+                print("hungry, sense food")
+            else:
+                print("not hungry, sense food")
+            return self.isHungry(), 1
+        elif self.isAtCache and not self.isHungry() and self.isFoodInHand:
+            if(self.isHungry()):
+                print("hungry, At cache, food in hand")
+            else:
+                print("not hungry, At cache, food in hand")
+            return 5,self.isHungry(),4
+        elif not self.isHungry() and self.isFoodInHand:
+            if(self.isHungry()):
+                print("hungry, food in hand")
+            else:
+                print("not hungry, food in hand")
+            return self.isHungry(),4
+        elif self.isAtCache:
+            if(self.isHungry()):
+                print("hungry, at cache")
+            else:
+                print("not hungry, at cache")
+            return 5,self.isHungry()
+        else:
+            return 0
         '''elif food is not None and not self.isHungry():
             return 4'''
-        elif food is not None and nonfood is None:
-            return self.isHungry(), 1
         '''elif food is None and nonfood is not None:
             return self.isHungry(), 2'''
         '''else:
             return self.isHungry(), 3'''
-        elif self.isAtCache and !self.isHungry() and self.isFoodInHand:
-            return 5,self.isHungry(),4
-        elif !self.isHungry() and self.isFoodInHand:
-            return self.isHungry(),4
-        elif self.isAtCache:
-            return 5,self.isHungry()
-        else
-            return 0
 
     def decodeAndExecuteAction(self, action, foods, nonfoods):
         if action == 0: #move randomly
             self.moveInDirection(random.randrange(0, 4))
+            print("Move randomly")
         elif action == 1:  #move towards food
+            print("Move towards food")
             food = self.senseFood(foods)
             if food != None:
                 if self.executingAction is False:
@@ -176,6 +218,7 @@ class Animat(cell.Cell):
             else:
                 self.moveInDirection(random.randrange(0, 4))
         elif action == 2: #move towards nonfood
+            print("Move towards non food")
             nonfood = self.senseFood(nonfoods)
             if nonfood != None:
                 if self.executingAction is False:
@@ -186,11 +229,28 @@ class Animat(cell.Cell):
                 self.moveInDirection(random.randrange(0, 4))
         elif action == 3:   #pick up food
             self.color = cell.BROWN
+            self.executingAction = True
+            if self.moveTowardsCache(self.cache[0],self.cache[1]):
+                self.isFoodInHand = True
+                self.executingAction = False
+                self.isAtCache = True
+            print("Pick up")
         elif action == 4:   #put down food
             self.color = cell.BLUE
+            self.isFoodInHand = False
+            print("Putting down")
+        elif action == 5:
+            self.eat()
+            print("Digging")
         elif action == 6:   #move towards cache
             print("Move towards cache")
-            self.moveInDirection(random.randrange(0, 4))
+            #self.moveInDirection(random.randrange(0, 4))
+            self.executingAction = True
+            if self.moveTowardsCache(self.cache[0],self.cache[1]):
+                if not self.isHungry():
+                    self.isFoodInHand = True
+                self.executingAction = False
+                self.isAtCache = True
             
                 
 '''

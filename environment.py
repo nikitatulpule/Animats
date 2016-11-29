@@ -77,7 +77,7 @@ class Environment():
             if i >= len(self.animats):
                 break
             if self.animats[i].energy <= 0:
-                self.animats[i].ai.printQ()
+                #self.animats[i].ai.printQ()
                 a = self.animats[i]
                 self.animats.pop(i)
                 self.createAdvAnimat(a.ai)
