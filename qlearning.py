@@ -15,6 +15,7 @@ class State():
     NotHungry = False  
     FoodInHand = 4
     AtCache = 5
+    AtFoodSource = 6
 
 
 class Action():
@@ -29,17 +30,19 @@ class Action():
 class Actions():
     a = {}
     a[(State.SenseNothing)] = [Action.MoveRandomly]
-    a[(State.Hungry, State.SenseNothing)] = [Action.MoveRandomly, Action.MoveToCache]
+    a[(State.Hungry, State.SenseNothing)] = [Action.MoveToCache]
     a[(State.NotHungry, State.SenseNothing)] = [Action.MoveRandomly]
-    a[(State.Hungry, State.SenseFood)] = [Action.MoveRandomly, Action.MoveTowardsFood]
-    a[(State.NotHungry, State.SenseFood)] = [Action.MoveRandomly, Action.MoveTowardsFood,Action.PickUpFood]
-    a[(State.AtCache , State.NotHungry, State.FoodInHand)] = [Action.MoveRandomly,Action.PutDownFood]
-    a[(State.NotHungry,State.FoodInHand)] = [Action.MoveRandomly,Action.MoveToCache]
-    a[(State.AtCache, State.Hungry)] = [Action.MoveRandomly,Action.DigUpFood]
+    a[(State.Hungry, State.SenseFood)] = [Action.MoveTowardsFood]
+    a[(State.NotHungry, State.SenseFood)] = [Action.MoveTowardsFood]
+    a[(State.NotHungry, State.AtFoodSource)] = [Action.PickUpFood]
+    a[(State.Hungry, State.AtFoodSource)] = [Action.DigUpFood]
+    a[(State.AtCache , State.NotHungry, State.FoodInHand)] = [Action.PutDownFood]
+    a[(State.NotHungry,State.FoodInHand)] = [Action.MoveToCache]
+    a[(State.AtCache, State.Hungry)] = [Action.DigUpFood]
     a[(State.AtCache, State.NotHungry)] = [Action.MoveRandomly]
     
-    #a[(State.Hungry, State.SenseNonFood)] = [Action.MoveRandomly, Action.MoveTowardsNonFood]
-    #a[(State.NotHungry, State.SenseNonFood)] = [Action.MoveRandomly, Action.MoveTowardsNonFood]
+    a[(State.Hungry, State.SenseNonFood)] = [Action.MoveRandomly, Action.MoveTowardsNonFood]
+    a[(State.NotHungry, State.SenseNonFood)] = [Action.MoveRandomly, Action.MoveTowardsNonFood]
     #a[(State.Hungry, State.SenseFoodAndNonFood)] = [Action.MoveRandomly, Action.MoveTowardsFood, Action.MoveTowardsNonFood]
     #a[(State.NotHungry, State.SenseFoodAndNonFood)] = [Action.MoveRandomly, Action.MoveTowardsFood, Action.MoveTowardsNonFood]
   

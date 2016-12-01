@@ -11,6 +11,6 @@ class Food(cell.Cell):
 class NonFood(cell.Cell):
 	def __init__(self, x, y):
 		self.cellType = 2
-		self.color = cell.RED
+		self.color = cell.BROWN
 		self.x = x
 		self.y = y

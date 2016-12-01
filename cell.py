@@ -5,7 +5,8 @@ WHITE = (255, 255, 255)
 BLUE =  (  0,   0, 255)
 GREEN = (  0, 255,   0)
 RED =   (255,   0,   0)
-BROWN = (165,42,42)
+YELLOW = (255,255,0)
+BROWN = (92,51,10)
 
 class Cell():
 	Size = 10
@@ -29,9 +30,12 @@ class Cell():
 
 
 class Wall(Cell):
-	def __init__(self):
-		self.cellType = -1
-		self.color = BLACK
+    def __init__(self):
+        self.cellType = -1
+        self.color = BLACK
+
+    def changeColor(self,color):
+        self.color = color
 
 class Road(Cell):
 	def __init__(self):

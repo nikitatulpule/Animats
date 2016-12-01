@@ -32,13 +32,13 @@ def drawCell(screen, cell, i, j):
 # Initialize the game
 pygame.init()
 
-width, height = 800, 800
+width, height = 600, 600
 screen=pygame.display.set_mode((width, height))
 
 
 env = environment.Environment(width / cell.Cell.Size, height / cell.Cell.Size)
 env.createFoods()
-env.createNonFoods(7)
+env.createNonFoods(10)
 env.createAnimats()
 #env.createAnimats()
  

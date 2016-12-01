@@ -18,6 +18,7 @@ class Environment():
         self.nonfoods = []
         self.seasonFood = [30,40,35,22,20,7,3,4,3,5,7,8]
         self.currentSeason = 0
+        self.FoodInCache = {}
 
     def initGrids(self, w, h):
         for i in range(int(w)):
@@ -28,14 +29,14 @@ class Environment():
                     self.grids[i][j] = Road()
 
     def createAnimats(self):
-        x = randint(0,self.width)
-        y = randint(0,self.height)
+        x = randint(1,self.width)
+        y = randint(1,self.height)
         a = Animat(x,y, self)
         self.animats.append(a)
         
     def createAdvAnimat(self, advAI):
-        x = randint(0,self.width)
-        y = randint(0,self.height)
+        x = randint(0,self.width-1)
+        y = randint(0,self.height-1)
         a = Animat(x,y, self)
         a.ai = advAI
         self.animats.append(a)
@@ -51,13 +52,14 @@ class Environment():
     def createFoods(self):
         self.destroyAllFood()
         for i in range(self.seasonFood[self.currentSeason]):
-            x = randint(0,self.width)
-            y = randint(0,self.height)
-            self.foods.append(Food(x+1, y+1))
+            x = randint(1,self.width-2)
+            y = randint(1,self.height-2)
+            self.foods.append(Food(x, y))
         self.currentSeason = (self.currentSeason+1)%len(self.seasonFood)
         threading.Timer(2.0, self.createFoods).start()
             
     def destroyFood(self,food):
+        print ("destroy food")
         self.foods.remove(food)
         
     def destroyAllFood(self):
@@ -65,8 +67,8 @@ class Environment():
 
     def createNonFoods(self, num):
         for i in range(num):
-            x = randint(0,self.width)
-            y = randint(0,self.height)
+            x = randint(1,self.width-2)
+            y = randint(1,self.height-2)
             self.nonfoods.append(NonFood(x, y))
 
     def update(self):
