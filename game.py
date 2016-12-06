@@ -1,3 +1,6 @@
+'''
+Point of start for the project. This file initialises the screen elements and draws the pygame window
+'''
 from __future__ import absolute_import
 import pygame
 from pygame.locals import *
@@ -9,6 +12,7 @@ from six.moves import range
 import threading
 import time
 
+#draws the screen and its elements (animats, food and non food)
 def draw(screen, env):
     for i in range(int(env.width)):
         for j in range(int(env.height)):
@@ -37,10 +41,15 @@ screen=pygame.display.set_mode((width, height))
 
 
 env = environment.Environment(width / cell.Cell.Size, height / cell.Cell.Size)
+#number of food changes with seasons
 env.createFoods()
+#non food = potential cache locations
 env.createNonFoods(10)
+#currently 2 animats are created; later on more are created and the behavior is observed
 env.createAnimats()
-#env.createAnimats()
+env.createAnimats()
+env.createAnimats()
+env.createAnimats()
  
 # keep looping through
 while 1:
