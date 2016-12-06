@@ -27,6 +27,9 @@ def draw(screen, env):
     for i in range(len(env.animats)):
         drawCell(screen, env.animats[i], env.animats[i].x, env.animats[i].y)
 
+    for i in range(len(env.canimats)):
+        drawCell(screen, env.canimats[i], env.canimats[i].x, env.canimats[i].y)
+
 def drawCell(screen, cell, i, j):
     sx = i*cell.Size
     sy = j*cell.Size
@@ -47,9 +50,10 @@ env.createFoods()
 env.createNonFoods(10)
 #currently 2 animats are created; later on more are created and the behavior is observed
 env.createAnimats()
-env.createAnimats()
-env.createAnimats()
-env.createAnimats()
+env.createCAnimats()
+env.createCAnimats()
+env.createCAnimats()
+env.createCAnimats()
  
 # keep looping through
 while 1:

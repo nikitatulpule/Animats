@@ -4,6 +4,7 @@ This file defines the enviroment of the project -> controls location of the food
 from __future__ import absolute_import
 from cell import *
 from animats import *
+from canimats import *
 from food import *
 from six.moves import range
 
@@ -20,6 +21,7 @@ class Environment():
         self.grids =  [[None for col in range(int(w))] for row in range(int(h))]
         self.initGrids(w, h)
         self.animats = []
+	self.canimats = []
         self.foods = []
         self.nonfoods = []
         #we have defined the season -> initially there is plenty of food source(summer/spring),
@@ -50,6 +52,13 @@ class Environment():
         y = randint(1,self.height)
         a = Animat(x,y, self)
         self.animats.append(a)
+
+#randomly spawns an animat at a random location
+    def createCAnimats(self):
+        x = randint(1,self.width)
+        y = randint(1,self.height)
+        a = CAnimat(x,y, self)
+        self.canimats.append(a)
         
 #spawns an animat at a random location; it inherits the ai of the dead animat
     def createAdvAnimat(self, advAI):
@@ -82,11 +91,12 @@ class Environment():
         self.foods.remove(food)
      
     def destroyAllFood(self):
-        self.foods.clear()
+#        self.foods.clear()
+	del self.foods[:]
 
 #creates non food at random locations; their locations are kept fixed throughout the experiment
     def createNonFoods(self, num):
-        print (time.perf_counter())
+        #print (time.perf_counter())
         for i in range(num):
             x = randint(1,self.width-2)
             y = randint(1,self.height-2)
@@ -110,4 +120,17 @@ class Environment():
                 diewriter.writerow(("Die ",end_time - self.curr_time, self.currentSeason))
                 diefile.flush()
                 diefile.close()
+                #print("Die ",end_time - self.curr_time, self.currentSeason)
+	
+	for i in range(len(self.canimats)):
+            self.canimats[i].update(self.foods, self.nonfoods)
+
+        for i in range(len(self.canimats)):
+            if i >= len(self.canimats):
+                break
+            if self.canimats[i].energy <= 0:
+                #self.animats[i].ai.printQ()
+                a = self.canimats[i]
+                self.canimats.pop(i)
+		#self.createAdvCAnimat(a.ai)
                 #print("Die ",end_time - self.curr_time, self.currentSeason)
