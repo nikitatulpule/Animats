@@ -30,21 +30,20 @@ class Action():
 class Actions():
     a = {}
     a[(State.SenseNothing)] = [Action.MoveRandomly]
-    a[(State.Hungry, State.SenseNothing)] = [Action.MoveToCache]
+    a[(State.Hungry, State.SenseNothing)] = [Action.MoveRandomly,Action.MoveToCache]
     a[(State.NotHungry, State.SenseNothing)] = [Action.MoveRandomly]
-    a[(State.Hungry, State.SenseFood)] = [Action.MoveTowardsFood]
-    a[(State.NotHungry, State.SenseFood)] = [Action.MoveTowardsFood]
-    a[(State.NotHungry, State.AtFoodSource)] = [Action.PickUpFood]
-    a[(State.Hungry, State.AtFoodSource)] = [Action.DigUpFood]
-    a[(State.AtCache , State.NotHungry, State.FoodInHand)] = [Action.PutDownFood]
-    a[(State.NotHungry,State.FoodInHand)] = [Action.MoveToCache]
-    a[(State.AtCache, State.Hungry)] = [Action.DigUpFood]
+    a[(State.Hungry, State.SenseFood)] = [Action.MoveRandomly,Action.MoveTowardsFood]
+    a[(State.NotHungry, State.SenseFood)] = [Action.MoveRandomly,Action.MoveTowardsFood]
+    a[(State.NotHungry, State.AtFoodSource)] = [Action.MoveRandomly,Action.PickUpFood]
+    a[(State.Hungry, State.AtFoodSource)] = [Action.MoveRandomly,Action.DigUpFood]
+    a[(State.AtCache , State.NotHungry, State.FoodInHand)] = [Action.MoveRandomly,Action.PutDownFood]
+    a[(State.NotHungry,State.FoodInHand)] = [Action.MoveRandomly,Action.MoveToCache]
+    a[(State.AtCache, State.Hungry)] = [Action.MoveRandomly,Action.DigUpFood]
     a[(State.AtCache, State.NotHungry)] = [Action.MoveRandomly]
     
     a[(State.Hungry, State.SenseNonFood)] = [Action.MoveRandomly, Action.MoveTowardsNonFood]
     a[(State.NotHungry, State.SenseNonFood)] = [Action.MoveRandomly, Action.MoveTowardsNonFood]
-    #a[(State.Hungry, State.SenseFoodAndNonFood)] = [Action.MoveRandomly, Action.MoveTowardsFood, Action.MoveTowardsNonFood]
-    #a[(State.NotHungry, State.SenseFoodAndNonFood)] = [Action.MoveRandomly, Action.MoveTowardsFood, Action.MoveTowardsNonFood]
+
   
 class QLearn():
 	
@@ -57,8 +56,6 @@ class QLearn():
         self.actions = actions
         self.lastAction = None
 
-        #self.q[((1, 1), 1)] = 1
-
     def setQ(self, state, action, value):
         self.q[(state,action)] = value
 
@@ -66,6 +63,7 @@ class QLearn():
         return self.q.get((state, action), 0.0)
         # return self.q.get((state, action), 1.0)
 
+#update the Q table depending on the state-action and the reward
     def learnQ(self, state, action, reward, value):
         oldv = self.q.get((state, action), None)
         if oldv is None:
@@ -73,6 +71,7 @@ class QLearn():
         else:
             self.q[(state, action)] = oldv + self.alpha * (value - oldv)
 
+#from the current state, select the most appropriate action for the animat
     def chooseAction(self, state, return_q=False):
         #q = [self.getQ(state, a) for a in self.actions]
         q = [self.getQ(state, a) for a in Actions.a[state]]
@@ -103,20 +102,13 @@ class QLearn():
 
     def learn(self, state1, action1, reward, state2):
         #maxqnew = max([self.getQ(state2, a) for a in self.actions])
-        #print(state2)
         maxqnew = max([self.getQ(state2, a) for a in Actions.a[state2]])
         self.learnQ(state1, action1, reward, reward + self.gamma*maxqnew)
+        #self.printQ()
 
     def printQ(self):
-
-        keys = list(self.q.keys())
-        states = list(set([a for a,b in keys]))
-        actions = list(set([b for a,b in keys]))
-
-        dstates = ["".join([str(int(t))+" " for t in list(tup)]) for tup in states]
-        print((" "*4) + " ".join(["%8s" % ("("+s+")") for s in dstates]))
-        for a in actions:
-            print(("%3d " % (a)) + \
-            " ".join(["%8.2f" % (self.getQ(s,a)) for s in states]))
+        
+        for keys in self.q:
+            print (keys,self.q[keys])
 
 

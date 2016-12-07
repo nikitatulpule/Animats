@@ -30,12 +30,6 @@ class Environment():
         self.FoodInCache = {}
         self.curr_time = time.time()
         self.timestamp = str(datetime.now())
-        '''self.cachefile = open("Cacheobs.csv",'wt')
-        self.digfile = open("Digobs.csv",'wt')
-        self.diefile = open("Dieobs.csv",'wt')
-        self.cachewriter = csv.writer(self.cachefile)
-        self.digwriter = csv.writer(self.digfile)
-        self.diewriter = csv.writer(self.diefile)'''
 
     def initGrids(self, w, h):
         for i in range(int(w)):
@@ -58,14 +52,6 @@ class Environment():
         a = Animat(x,y, self)
         a.ai = advAI
         self.animats.append(a)
-
-    '''
-    def createFoods(self, num):
-        for i in range(num):
-            x = randint(0,self.width)
-            y = randint(0,self.height)
-            self.foods.append(Food(x, y))
-    '''
     
 #creates food sources at random locations; frequency kept at 5 seconds
     def createFoods(self):
@@ -86,7 +72,6 @@ class Environment():
 
 #creates non food at random locations; their locations are kept fixed throughout the experiment
     def createNonFoods(self, num):
-        print (time.perf_counter())
         for i in range(num):
             x = randint(1,self.width-2)
             y = randint(1,self.height-2)
@@ -104,10 +89,10 @@ class Environment():
                 a = self.animats[i]
                 self.animats.pop(i)
                 self.createAdvAnimat(a.ai)
-                end_time = time.time()
+                #output written in .csv file for observation of animat behavior
+                '''end_time = time.time()
                 diefile = open("Dieobs"+self.timestamp+".csv",'a')
                 diewriter = csv.writer(diefile)
                 diewriter.writerow(("Die ",end_time - self.curr_time, self.currentSeason))
                 diefile.flush()
-                diefile.close()
-                #print("Die ",end_time - self.curr_time, self.currentSeason)
+                diefile.close()'''
